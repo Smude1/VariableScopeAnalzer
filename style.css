@@ -1,0 +1,962 @@
+/* ==========================================================================
+   Variable Scope Analyzer - Phase 1 Stylesheet
+   Modern Dark Developer Theme (Navy / Slate / Charcoal)
+   ========================================================================== */
+
+:root {
+    /* Color Palette */
+    --bg-app: #0d1117;           /* Deep dark background */
+    --bg-surface: #161b22;       /* Surface panel background */
+    --bg-surface-elevated: #21262d; /* Hover & elevated card background */
+    --bg-input: #0b0e14;         /* Textarea and input background */
+    
+    --border-color: #30363d;     /* Clean border divider */
+    --border-focus: #58a6ff;     /* Focus highlight blue */
+    
+    --text-primary: #f0f6fc;     /* Primary readable text */
+    --text-secondary: #8b949e;   /* Subtle labels & muted text */
+    --text-muted: #6e7681;       /* Very low emphasis text */
+    
+    --accent-primary: #38bdf8;   /* Bright cyan/blue accent */
+    --accent-hover: #0284c7;     /* Hover state for primary buttons */
+    --accent-subtle: rgba(56, 189, 248, 0.12); /* Subtle glow & badges */
+
+    --success-green: #3fb950;
+    --warning-orange: #d29922;
+    --info-blue: #58a6ff;
+    
+    /* Typography */
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-code: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
+    
+    /* Spacing & Radii */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --transition: all 0.2s ease-in-out;
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* App Container */
+.app-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+/* ==========================================================================
+   Header Section
+   ========================================================================== */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2));
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-code);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+.project-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.project-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--success-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--success-green);
+    animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.9); }
+}
+
+/* ==========================================================================
+   Control Bar & Language Selection
+   ========================================================================== */
+.control-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.control-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.language-dropdown {
+    appearance: none;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 8px 36px 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.language-dropdown:hover {
+    border-color: var(--text-secondary);
+}
+
+.language-dropdown:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+}
+
+.select-wrapper::after {
+    content: "▼";
+    font-size: 9px;
+    color: var(--text-secondary);
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.language-badge {
+    background-color: var(--accent-subtle);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent-primary);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: var(--font-code);
+    font-weight: 600;
+}
+
+.action-buttons-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.35);
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: #0b111a;
+    font-weight: 700;
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+.btn-primary:hover {
+    background-color: #7dd3fc;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--bg-surface-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #2b323c;
+    border-color: var(--text-secondary);
+}
+
+.btn-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* ==========================================================================
+   Summary Metric Cards
+   ========================================================================== */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.summary-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.summary-card:hover {
+    border-color: #3b434e;
+    transform: translateY(-1px);
+}
+
+.card-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: var(--font-code);
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.card-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Workspace Grid (Left: Editor, Right: Results)
+   ========================================================================== */
+.workspace-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 480px;
+}
+
+.panel {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: rgba(33, 38, 45, 0.4);
+    min-height: 52px;
+}
+
+.panel-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-icon {
+    font-size: 16px;
+}
+
+.panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.editor-lang-indicator {
+    font-size: 12px;
+    font-family: var(--font-code);
+    color: var(--accent-primary);
+    background-color: var(--accent-subtle);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* Editor Wrapper */
+.editor-wrapper {
+    flex: 1;
+    display: flex;
+    background-color: var(--bg-input);
+    min-height: 380px;
+}
+
+.code-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    padding: 16px;
+    background-color: transparent;
+    color: #e6edf3;
+    font-family: var(--font-code);
+    font-size: 13.5px;
+    line-height: 1.6;
+    border: none;
+    resize: none;
+    outline: none;
+    tab-size: 4;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+}
+
+.code-textarea::placeholder {
+    color: var(--text-muted);
+    font-family: var(--font-code);
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.editor-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+}
+
+.char-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: var(--font-code);
+}
+
+/* ==========================================================================
+   Results Dashboard & Tabs
+   ========================================================================== */
+.tab-nav {
+    display: flex;
+    gap: 4px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-surface-elevated);
+}
+
+.tab-btn.active {
+    color: var(--accent-primary);
+    background-color: var(--accent-subtle);
+}
+
+.tab-content {
+    display: none;
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Notice Container (for Analyze Scope message) */
+.notice-container {
+    padding: 12px 16px 0 16px;
+}
+
+.notice-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background-color: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.notice-box.info {
+    border-color: var(--info-blue);
+    background-color: rgba(88, 166, 255, 0.1);
+}
+
+.notice-icon {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-content strong {
+    display: block;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.notice-content p {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+}
+
+.notice-dismiss {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+}
+
+.notice-dismiss:hover {
+    color: var(--text-primary);
+}
+
+/* Empty States */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    min-height: 280px;
+    padding: 24px;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+    opacity: 0.85;
+}
+
+.empty-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.empty-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    max-width: 380px;
+    line-height: 1.5;
+}
+
+/* Scope specification preview card in Tab 3 */
+.scope-spec-card {
+    margin-top: 20px;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    text-align: left;
+    width: 100%;
+    max-width: 440px;
+}
+
+.scope-spec-card strong {
+    font-size: 12px;
+    color: var(--accent-primary);
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.scope-spec-card ul {
+    list-style-type: none;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.scope-spec-card li strong {
+    display: inline;
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Symbol Table Styling
+   ========================================================================== */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+.symbol-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+.symbol-table th {
+    background-color: var(--bg-surface-elevated);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.symbol-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.empty-table-row td {
+    padding: 48px 16px;
+    text-align: center;
+}
+
+.table-empty-message {
+    color: var(--text-secondary);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* ==========================================================================
+   Phase 2: Result Components (Errors, Symbol Table, Scope Hierarchy)
+   ========================================================================== */
+
+/* Errors & Warnings List */
+.error-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.error-item {
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--warning-orange);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.error-item.error-fatal {
+    border-left-color: #f85149;
+    background-color: rgba(248, 81, 73, 0.05);
+}
+
+.error-item.error-warning {
+    border-left-color: var(--warning-orange);
+    background-color: rgba(210, 153, 34, 0.05);
+}
+
+.error-item-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge-error-type {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.badge-error-type.error-fatal {
+    background-color: rgba(248, 81, 73, 0.2);
+    color: #ff7b72;
+    border: 1px solid rgba(248, 81, 73, 0.4);
+}
+
+.badge-error-type.error-warning {
+    background-color: rgba(210, 153, 34, 0.2);
+    color: #e3b341;
+    border: 1px solid rgba(210, 153, 34, 0.4);
+}
+
+.error-line-badge {
+    font-size: 11.5px;
+    font-family: var(--font-code);
+    color: var(--text-secondary);
+    background-color: var(--bg-input);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.error-var-badge {
+    font-size: 12px;
+    font-family: var(--font-code);
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.error-item-msg {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.45;
+}
+
+/* Success State when 0 Errors */
+.success-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 36px 20px;
+}
+
+.success-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.success-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--success-green);
+    margin-bottom: 6px;
+}
+
+.success-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    max-width: 420px;
+}
+
+/* Symbol Table Badges */
+.sym-var-name {
+    font-family: var(--font-code);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.sym-type-badge {
+    display: inline-block;
+    font-family: var(--font-code);
+    font-size: 12px;
+    color: var(--accent-primary);
+    background-color: var(--accent-subtle);
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.sym-scope-badge {
+    display: inline-block;
+    font-size: 11.5px;
+    color: #e6edf3;
+    background-color: var(--bg-surface-elevated);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+/* Scope Hierarchy View */
+.scope-tree-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.scope-card {
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.scope-card:hover {
+    border-color: #3b434e;
+}
+
+.scope-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.scope-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scope-glyph {
+    font-size: 16px;
+}
+
+.scope-card-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: var(--font-code);
+}
+
+.scope-level-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    background-color: rgba(88, 166, 255, 0.15);
+    color: var(--info-blue);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+}
+
+.scope-meta-info {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.scope-var-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.scope-var-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.scope-var-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-family: var(--font-code);
+}
+
+.scope-var-pill .var-name {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.scope-var-pill .var-type {
+    color: var(--accent-primary);
+    font-size: 11px;
+}
+
+.scope-empty-vars {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.app-footer {
+    text-align: center;
+    padding: 14px 0;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 12.5px;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2b323c;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3b434e;
+}
+
+/* ==========================================================================
+   Responsive Design (Mobile & Tablets)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .workspace-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .control-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons-top {
+        justify-content: flex-start;
+    }
+
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-right {
+        width: 100%;
+    }
+
+    .status-indicator {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variable Scope Analyzer | Compiler Construction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo-icon">
+                    <span>{ }</span>
+                </div>
+                <div>
+                    <h1 class="project-title">Variable Scope Analyzer</h1>
+                    <p class="project-subtitle">Multi-Language Compiler Construction Tool</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator" id="statusIndicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text" id="statusText">Ready to Analyze</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Control Bar & Language Selector -->
+        <div class="control-bar">
+            <div class="control-group">
+                <label for="languageSelect" class="control-label">Target Language:</label>
+                <div class="select-wrapper">
+                    <select id="languageSelect" class="language-dropdown">
+                        <option value="C">C</option>
+                        <option value="C++">C++</option>
+                        <option value="Java">Java</option>
+                        <option value="Python">Python</option>
+                    </select>
+                </div>
+                <div class="language-badge" id="languageBadge">
+                    Active: <span id="badgeLanguageName">C</span>
+                </div>
+            </div>
+
+            <div class="action-buttons-top">
+                <button type="button" class="btn btn-secondary" id="loadExampleBtn" title="Load a sample program for the selected language">
+                    <span class="btn-icon">📋</span> Load Example
+                </button>
+                <button type="button" class="btn btn-secondary" id="clearCodeBtn" title="Clear editor content and reset results">
+                    <span class="btn-icon">🗑️</span> Clear Code
+                </button>
+            </div>
+        </div>
+
+        <!-- Metric Summary Cards -->
+        <section class="summary-cards" aria-label="Analysis Metric Summaries">
+            <div class="summary-card">
+                <span class="card-label">Variables Found</span>
+                <span class="card-value" id="varCountMetric">—</span>
+                <span class="card-meta">Awaiting Phase 2 parser</span>
+            </div>
+            <div class="summary-card">
+                <span class="card-label">Errors Detected</span>
+                <span class="card-value" id="errorCountMetric">—</span>
+                <span class="card-meta">No syntax checks executed</span>
+            </div>
+            <div class="summary-card">
+                <span class="card-label">Scope Levels</span>
+                <span class="card-value" id="scopeLevelMetric">—</span>
+                <span class="card-meta">Global / Local / Block hierarchy</span>
+            </div>
+        </section>
+
+        <!-- Main Workspace (Editor + Results Dashboard) -->
+        <main class="workspace-grid">
+            <!-- Left Panel: Source Code Editor -->
+            <section class="panel editor-panel">
+                <div class="panel-header">
+                    <div class="panel-title-group">
+                        <span class="panel-icon">💻</span>
+                        <h2 class="panel-title">Source Code Editor</h2>
+                    </div>
+                    <span class="editor-lang-indicator" id="editorLangIndicator">Language: C</span>
+                </div>
+                <div class="editor-wrapper">
+                    <textarea 
+                        id="sourceEditor" 
+                        class="code-textarea" 
+                        spellcheck="false" 
+                        placeholder="// Enter or paste your source code here...&#10;// Or click 'Load Example' above to inspect a sample program."></textarea>
+                </div>
+                <div class="editor-footer">
+                    <span class="char-count" id="charCount">0 characters | 1 line</span>
+                    <button type="button" class="btn btn-primary" id="analyzeScopeBtn">
+                        <span class="btn-icon">⚡</span> Analyze Scope
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Results Dashboard -->
+            <section class="panel results-panel">
+                <div class="panel-header">
+                    <div class="panel-title-group">
+                        <span class="panel-icon">📊</span>
+                        <h2 class="panel-title">Analysis Dashboard</h2>
+                    </div>
+                    <!-- Tab Controls -->
+                    <nav class="tab-nav" role="tablist">
+                        <button type="button" class="tab-btn active" role="tab" id="tabErrorsBtn" aria-selected="true" aria-controls="tabErrors">
+                            Errors & Warnings
+                        </button>
+                        <button type="button" class="tab-btn" role="tab" id="tabSymbolsBtn" aria-selected="false" aria-controls="tabSymbols">
+                            Symbol Table
+                        </button>
+                        <button type="button" class="tab-btn" role="tab" id="tabScopeBtn" aria-selected="false" aria-controls="tabScope">
+                            Scope Information
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Phase 1 Notice Area (Updates when Analyze is clicked) -->
+                <div class="notice-container" id="noticeContainer" style="display: none;">
+                    <div class="notice-box info" id="noticeBox">
+                        <span class="notice-icon">ℹ️</span>
+                        <div class="notice-content">
+                            <strong id="noticeTitle">Phase 1 Interface Preview</strong>
+                            <p id="noticeMessage">Scope analysis will be implemented in Phase 2.</p>
+                        </div>
+                        <button type="button" class="notice-dismiss" id="noticeDismiss" title="Dismiss notice">&times;</button>
+                    </div>
+                </div>
+
+                <!-- Tab Content 1: Errors & Warnings -->
+                <div class="tab-content active" id="tabErrors" role="tabpanel" aria-labelledby="tabErrorsBtn">
+                    <div class="empty-state">
+                        <div class="empty-icon">🛡️</div>
+                        <h3 class="empty-title">No analysis performed yet.</h3>
+                        <p class="empty-description">
+                            Compile-time scope errors, shadowing warnings, and undeclared variable reports will be populated here during Phase 2.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tab Content 2: Symbol Table -->
+                <div class="tab-content" id="tabSymbols" role="tabpanel" aria-labelledby="tabSymbolsBtn">
+                    <div class="table-container">
+                        <table class="symbol-table">
+                            <thead>
+                                <tr>
+                                    <th>Variable Name</th>
+                                    <th>Data Type</th>
+                                    <th>Declaration Line</th>
+                                    <th>Scope Level</th>
+                                </tr>
+                            </thead>
+                            <tbody id="symbolTableBody">
+                                <tr class="empty-table-row">
+                                    <td colspan="4">
+                                        <div class="table-empty-message">
+                                            <span>📋</span> Symbol table is empty. Run scope analysis to identify variable declarations.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Content 3: Scope Information -->
+                <div class="tab-content" id="tabScope" role="tabpanel" aria-labelledby="tabScopeBtn">
+                    <div class="empty-state">
+                        <div class="empty-icon">🌳</div>
+                        <h3 class="empty-title">Scope Hierarchy Preview</h3>
+                        <p class="empty-description">
+                            Detected variable scopes (global, function, block, and class scopes) along with their lifetime hierarchies will appear here after the scope-analysis algorithm is implemented.
+                        </p>
+                        <div class="scope-spec-card">
+                            <strong>Phase 2 Target Scope Rules:</strong>
+                            <ul>
+                                <li><strong>C:</strong> Global, Function, Block (compound statements)</li>
+                                <li><strong>C++:</strong> Global, Namespace, Class, Function, Block</li>
+                                <li><strong>Java:</strong> Class (Static/Instance), Method, Block</li>
+                                <li><strong>Python:</strong> LEGB (Local, Enclosing, Global, Built-in)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="app-footer">
+            <p>Compiler Construction Mini Project | Multi-Language Variable Scope Analyzer</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
